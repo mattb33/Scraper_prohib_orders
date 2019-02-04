@@ -109,9 +109,9 @@ soupSA = BeautifulSoup(dataSA.text, 'html.parser')
 myTableSA = soupSA.find('div', class_='entry-content')
 
 # Iterate through each row
-for item in myTableSA:
+for item in myTableSA.find_all('h2'):
     date = 'view order details'
-    name = [item.text for item in myTableSA.find_all('h2')]
+    name = item.text
     practitionerType = 'not listed'
     orderDetails = 'to be fixed later'
     orderType = 'not listed'

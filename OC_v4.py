@@ -27,10 +27,10 @@ header = ['state', 'date', 'name', 'practitionerType', 'orderDetails', 'orderTyp
 dataQLD = requests.get(urlQLD)
 
 # parse the html using beautiful soup and store in variable `soup`
-soup = BeautifulSoup(dataQLD.text, 'html.parser')
+soupQLD = BeautifulSoup(dataQLD.text, 'html.parser')
 
 # Identify table with data we want
-myTableQLD = soup.find('tbody')
+myTableQLD = soupQLD.find('tbody')
 
 # Iterate through each row
 for tr in myTableQLD.find_all('tr'):
@@ -56,8 +56,8 @@ range_page_url = [urlVIC.format(i) for i in range(0,5)]
 
 for range in range_page_url:
     r = requests.get(range)
-    soup = BeautifulSoup(r.text, 'lxml')
-    for tr in soup.table.find_all('tr')[1:-1]:
+    soupVIC = BeautifulSoup(r.text, 'lxml')
+    for tr in soupVIC.table.find_all('tr')[1:-1]:
         date = [span.text for span in tr.find_all('span')]
         name = [strong.text for strong in tr.find_all('strong')]
         practitionerType = [strong.next_sibling for strong in tr.find_all('strong')]
@@ -76,9 +76,9 @@ print('VIC - data gathered')
 for link in urlNSW:
     dataNSW = requests.get(link)
     # parse the html using beautiful soup and store in variable `soup`
-    soup = BeautifulSoup(dataNSW.text, 'html.parser')
+    soupNSW = BeautifulSoup(dataNSW.text, 'html.parser')
     # Identify table with data we want
-    myTableNSW = soup.find('div', class_='widget')
+    myTableNSW = soupNSW.find('div', class_='widget')
 
 # Iterate through each row
     for row in myTableNSW.find_all('dl'):
@@ -104,14 +104,14 @@ print('NSW - data gathered')
 # # Get website data
 dataSA = requests.get(urlSA)
 # parse the html using beautiful soup and store in variable `soup`
-soup = BeautifulSoup(dataSA.text, 'html.parser')
+soupSA = BeautifulSoup(dataSA.text, 'html.parser')
 # Identify table with data we want
-myTableSA = soup.find('div', class_='entry-content')
+myTableSA = soupSA.find('div', class_='entry-content')
 
 # Iterate through each row
-for item in myTableSA('h2'):
+for item in myTableSA:
     date = 'view order details'
-    name = item.text
+    name = [item.text for item in myTableSA.find_all('h2')]
     practitionerType = 'not listed'
     orderDetails = 'to be fixed later'
     orderType = 'not listed'
@@ -140,3 +140,4 @@ with open('prohibition_orders.csv', mode='w') as csv_file:
         writer.writerow(item)
 
 print('Writing to CSV complete')
+
